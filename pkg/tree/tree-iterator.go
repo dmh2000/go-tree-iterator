@@ -28,3 +28,20 @@ func (t *BST[K, V]) BSTIterator() func(yield func(K, V) bool) {
 		inorder(t.root)
 	}
 }
+
+func (t *SgptRBT[K, V]) SgbtIterator() func(yield func(K, V) bool) {
+	return func(yield func(K, V) bool) {
+		var inorder func(*SgptNode[K, V])
+		inorder = func(n *SgptNode[K, V]) {
+			if n == nil {
+				return
+			}
+			inorder(n.left)
+			if !yield(n.key, n.val) {
+				return
+			}
+			inorder(n.right)
+		}
+		inorder(t.root)
+	}
+}

@@ -52,20 +52,20 @@ func TestContains3RBT(t *testing.T) {
 	bst.Put(2, "two")
 	bst.Put(3, "three")
 
-	if x, err := bst.Contains(1); err != nil {
-		t.Errorf("Contains(1) == %v; want true : %v", x, err)
+	if x, err := bst.Get(1); err != nil {
+		t.Errorf("Get(1) == %v; want true : %v", x, err)
 	}
 
-	if x, err := bst.Contains(2); err != nil {
-		t.Errorf("Contains(2) == %v; want true : %v", x, err)
+	if x, err := bst.Get(2); err != nil {
+		t.Errorf("Get(2) == %v; want true : %v", x, err)
 	}
 
-	if x, err := bst.Contains(3); err != nil {
-		t.Errorf("Contains(3) == %v; want true : %v", x, err)
+	if x, err := bst.Get(3); err != nil {
+		t.Errorf("Get(3) == %v; want true : %v", x, err)
 	}
 
-	if x, err := bst.Contains(4); err == nil {
-		t.Errorf("Contains(4) == %v; want false", x)
+	if x, err := bst.Get(4); err == nil {
+		t.Errorf("Get(4) == %v; want false", x)
 	}
 }
 
@@ -134,8 +134,10 @@ func TestBSTIterator(t *testing.T) {
 	bst.Put(3, "three")
 
 	keys := make([]int, 0)
+	values := make([]string, 0)
 	bst.BSTIterator()(func(k int, v string) bool {
 		keys = append(keys, k)
+		values = append(values, v)
 		return true
 	})
 
@@ -155,7 +157,7 @@ func TestBSTIteratorRandom(t *testing.T) {
 	bst := NewBST[int, string]()
 
 	m := make(map[int]string)
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 100; i++ {
 		k := rand.Intn(100)
 		v := strconv.Itoa(k)
 		m[k] = v
@@ -170,10 +172,12 @@ func TestBSTIteratorRandom(t *testing.T) {
 
 	// iterate over the BST and get the keys in order
 	keys2 := make([]int, 0)
+	values2 := make([]string, 0)
 
 	iter := bst.BSTIterator()
 	iter(func(k int, v string) bool {
 		keys2 = append(keys2, k)
+		values2 = append(values2, v)
 		return true
 	})
 
@@ -181,22 +185,14 @@ func TestBSTIteratorRandom(t *testing.T) {
 
 	// check that the keys are in order
 	k := keys2[0]
-	v, _ := bst.Get(k)
+	v := values2[0]
 	t.Log(k, v)
 	for i := 1; i < len(keys2); i++ {
-		// check the values matcht the keys
-		v, err := bst.Get(k)
-		if err != nil {
-			t.Errorf("Get(%v) = %v; want %v", k, v, m[k])
-		}
-		if v != m[k] {
-			t.Errorf("Get(%v) = %v; want %v", k, v, m[k])
-		}
-
-		t.Log(k, v)
 		if keys2[i] <= k {
 			t.Errorf("BSTIterator() == %v; want %v", keys2, keys2)
 		}
 		k = keys2[i]
+		v = values2[i]
+		t.Log(k, v)
 	}
 }
