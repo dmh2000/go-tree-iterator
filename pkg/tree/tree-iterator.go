@@ -12,10 +12,10 @@ func Iterator[T interface{}](items []T) func(yield func(T) bool) {
 }
 
 // an iterator for a BST
-func (t *BST[K, V]) BSTIterator() func(yield func(K, V) bool) {
+func (t *CopilotRBT[K, V]) CopilotIterator() func(yield func(K, V) bool) {
 	return func(yield func(K, V) bool) {
-		var inorder func(*Node[K, V])
-		inorder = func(n *Node[K, V]) {
+		var inorder func(*CopilotNode[K, V])
+		inorder = func(n *CopilotNode[K, V]) {
 			if n == nil {
 				return
 			}
@@ -29,10 +29,10 @@ func (t *BST[K, V]) BSTIterator() func(yield func(K, V) bool) {
 	}
 }
 
-func (t *SgptRBT[K, V]) SgbtIterator() func(yield func(K, V) bool) {
+func (t *GeminiRBT[K, V]) GeminiIterator() func(yield func(K, V) bool) {
 	return func(yield func(K, V) bool) {
-		var inorder func(*SgptNode[K, V])
-		inorder = func(n *SgptNode[K, V]) {
+		var inorder func(*GeminiNode[K, V])
+		inorder = func(n *GeminiNode[K, V]) {
 			if n == nil {
 				return
 			}

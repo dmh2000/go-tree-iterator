@@ -12,17 +12,17 @@ const black = false
 // this implemention is derived directly from Sedgwick's Java implementation
 // derived from https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/RedBlackBST.java.html
 
-// Node represents a node in the red-black tree
-type Node[K constraints.Ordered, V any] struct {
-	key         K           // key
-	val         V           // value
-	left, right *Node[K, V] // links to left and right subtrees
-	color       bool        // color of parent link
-	size        int         // subtree count
+// CopilotNode represents a node in the red-black tree
+type CopilotNode[K constraints.Ordered, V any] struct {
+	key         K                  // key
+	val         V                  // value
+	left, right *CopilotNode[K, V] // links to left and right subtrees
+	color       bool               // color of parent link
+	size        int                // subtree count
 }
 
-func NewNode[K constraints.Ordered, V any](key K, val V, color bool, size int) *Node[K, V] {
-	return &Node[K, V]{
+func NewNode[K constraints.Ordered, V any](key K, val V, color bool, size int) *CopilotNode[K, V] {
+	return &CopilotNode[K, V]{
 		key:   key,
 		val:   val,
 		left:  nil,
@@ -33,7 +33,7 @@ func NewNode[K constraints.Ordered, V any](key K, val V, color bool, size int) *
 }
 
 // get color of a node
-func (n *Node[K, V]) IsRed() bool {
+func (n *CopilotNode[K, V]) IsRed() bool {
 	if n == nil {
 		return false
 	}
@@ -41,35 +41,35 @@ func (n *Node[K, V]) IsRed() bool {
 }
 
 // get size of a specified node
-func (n *Node[K, V]) Size() int {
+func (n *CopilotNode[K, V]) Size() int {
 	if n == nil {
 		return 0
 	}
 	return n.size
 }
 
-// BST is a red-black tree
-type BST[K constraints.Ordered, V any] struct {
-	root *Node[K, V]
+// CopilotRBT is a red-black tree
+type CopilotRBT[K constraints.Ordered, V any] struct {
+	root *CopilotNode[K, V]
 }
 
 // create a new red-black tree
-func NewBST[K constraints.Ordered, V any]() *BST[K, V] {
-	return &BST[K, V]{}
+func NewCopilotRBT[K constraints.Ordered, V any]() *CopilotRBT[K, V] {
+	return &CopilotRBT[K, V]{}
 }
 
 // get the size of the tree from the root
-func (t *BST[K, V]) Size() int {
+func (t *CopilotRBT[K, V]) Size() int {
 	return t.root.Size()
 }
 
 // check if the tree is empty
-func (t *BST[K, V]) IsEmpty() bool {
+func (t *CopilotRBT[K, V]) IsEmpty() bool {
 	return t.Size() == 0
 }
 
 // get the value of a key
-func (t *BST[K, V]) Get(key K) (V, error) {
+func (t *CopilotRBT[K, V]) Get(key K) (V, error) {
 	return t.get(t.root, key)
 }
 
@@ -84,7 +84,7 @@ func compare[T constraints.Ordered](a T, b T) int {
 }
 
 // get the value of a key from a specified subtree
-func (t *BST[K, V]) get(x *Node[K, V], key K) (V, error) {
+func (t *CopilotRBT[K, V]) get(x *CopilotNode[K, V], key K) (V, error) {
 	if x == nil {
 		return t.root.val, fmt.Errorf("input node is nil")
 	}
@@ -104,7 +104,7 @@ func (t *BST[K, V]) get(x *Node[K, V], key K) (V, error) {
 }
 
 // does this tree contain the given key?
-func (t *BST[K, V]) Contains(key K) (bool, error) {
+func (t *CopilotRBT[K, V]) Contains(key K) (bool, error) {
 	_, err := t.Get(key)
 	if err != nil {
 		return false, err
@@ -113,13 +113,13 @@ func (t *BST[K, V]) Contains(key K) (bool, error) {
 }
 
 // insert a key-value pair into the red-black tree
-func (t *BST[K, V]) Put(key K, val V) {
+func (t *CopilotRBT[K, V]) Put(key K, val V) {
 	t.root = t.put(t.root, key, val)
 	t.root.color = black
 }
 
 // insert the key-value pair in the subtree rooted at h
-func (t *BST[K, V]) put(h *Node[K, V], key K, val V) *Node[K, V] {
+func (t *CopilotRBT[K, V]) put(h *CopilotNode[K, V], key K, val V) *CopilotNode[K, V] {
 	if h == nil {
 		return NewNode(key, val, red, 1)
 	}
@@ -150,7 +150,7 @@ func (t *BST[K, V]) put(h *Node[K, V], key K, val V) *Node[K, V] {
 // ************ RBT helper functions ************
 
 // Red-Black Rotations
-func (t *BST[K, V]) rotateRight(h *Node[K, V]) *Node[K, V] {
+func (t *CopilotRBT[K, V]) rotateRight(h *CopilotNode[K, V]) *CopilotNode[K, V] {
 	x := h.left
 	h.left = x.right
 	x.right = h
@@ -161,7 +161,7 @@ func (t *BST[K, V]) rotateRight(h *Node[K, V]) *Node[K, V] {
 	return x
 }
 
-func (t *BST[K, V]) rotateLeft(h *Node[K, V]) *Node[K, V] {
+func (t *CopilotRBT[K, V]) rotateLeft(h *CopilotNode[K, V]) *CopilotNode[K, V] {
 	x := h.right
 	h.right = x.left
 	x.left = h
@@ -172,14 +172,14 @@ func (t *BST[K, V]) rotateLeft(h *Node[K, V]) *Node[K, V] {
 	return x
 }
 
-func (t *BST[K, V]) flipColors(h *Node[K, V]) {
+func (t *CopilotRBT[K, V]) flipColors(h *CopilotNode[K, V]) {
 	h.color = !h.color
 	h.left.color = !h.left.color
 	h.right.color = !h.right.color
 }
 
 // ************ Ordered Symbol Table Functions ***********
-func (t *BST[K, V]) Min() (K, error) {
+func (t *CopilotRBT[K, V]) Min() (K, error) {
 	if t.IsEmpty() {
 		return t.root.key, fmt.Errorf("tree is empty")
 	}
@@ -190,14 +190,14 @@ func (t *BST[K, V]) Min() (K, error) {
 	return n.key, nil
 }
 
-func (t *BST[K, V]) min(x *Node[K, V]) (*Node[K, V], error) {
+func (t *CopilotRBT[K, V]) min(x *CopilotNode[K, V]) (*CopilotNode[K, V], error) {
 	if x.left == nil {
 		return x, nil
 	}
 	return t.min(x.left)
 }
 
-func (t *BST[K, V]) Max() (K, error) {
+func (t *CopilotRBT[K, V]) Max() (K, error) {
 	if t.IsEmpty() {
 		return t.root.key, fmt.Errorf("tree is empty")
 	}
@@ -208,7 +208,7 @@ func (t *BST[K, V]) Max() (K, error) {
 	return n.key, nil
 }
 
-func (t *BST[K, V]) max(x *Node[K, V]) (*Node[K, V], error) {
+func (t *CopilotRBT[K, V]) max(x *CopilotNode[K, V]) (*CopilotNode[K, V], error) {
 	if x.right == nil {
 		return x, nil
 	}
@@ -216,7 +216,7 @@ func (t *BST[K, V]) max(x *Node[K, V]) (*Node[K, V], error) {
 }
 
 // return the largest key in the rbt tree less than or equal to key
-func (t *BST[K, V]) Floor(key K) (K, error) {
+func (t *CopilotRBT[K, V]) Floor(key K) (K, error) {
 	if t.IsEmpty() {
 		return t.root.key, fmt.Errorf("tree is empty")
 	}
@@ -228,7 +228,7 @@ func (t *BST[K, V]) Floor(key K) (K, error) {
 }
 
 // the largest key in the subtree rooted at x less than or equal to the given key
-func (t *BST[K, V]) floor(x *Node[K, V], key K) (*Node[K, V], error) {
+func (t *CopilotRBT[K, V]) floor(x *CopilotNode[K, V], key K) (*CopilotNode[K, V], error) {
 	if x == nil {
 		return x, fmt.Errorf("input node is nil")
 	}
@@ -252,7 +252,7 @@ func (t *BST[K, V]) floor(x *Node[K, V], key K) (*Node[K, V], error) {
 }
 
 // Returns the smallest key in the symbol table greater than or equal to key
-func (t *BST[K, V]) Ceiling(key K) (K, error) {
+func (t *CopilotRBT[K, V]) Ceiling(key K) (K, error) {
 	if t.IsEmpty() {
 		return t.root.key, fmt.Errorf("tree is empty")
 	}
@@ -264,7 +264,7 @@ func (t *BST[K, V]) Ceiling(key K) (K, error) {
 }
 
 // the smallest key in the subtree rooted at x greater than or equal to the given key
-func (t *BST[K, V]) ceiling(x *Node[K, V], key K) (*Node[K, V], error) {
+func (t *CopilotRBT[K, V]) ceiling(x *CopilotNode[K, V], key K) (*CopilotNode[K, V], error) {
 	if x == nil {
 		return x, fmt.Errorf("input node is nil")
 	}
@@ -290,7 +290,7 @@ func (t *BST[K, V]) ceiling(x *Node[K, V], key K) (*Node[K, V], error) {
 // ************ RBT Range Functions ***********
 
 // return all keys in ascending order
-func (t *BST[K, V]) Keys() ([]K, error) {
+func (t *CopilotRBT[K, V]) Keys() ([]K, error) {
 	if t.IsEmpty() {
 		return nil, fmt.Errorf("tree is empty")
 	}
@@ -308,14 +308,14 @@ func (t *BST[K, V]) Keys() ([]K, error) {
 }
 
 // return all keys in the range [lo..hi] in ascending order
-func (t *BST[K, V]) KeysRange(lo K, hi K) []K {
+func (t *CopilotRBT[K, V]) KeysRange(lo K, hi K) []K {
 	var keys []K
 	t.keys(t.root, &keys, lo, hi)
 	return keys
 }
 
 // add the keys between lo and hi to the queue
-func (t *BST[K, V]) keys(x *Node[K, V], keys *[]K, lo K, hi K) {
+func (t *CopilotRBT[K, V]) keys(x *CopilotNode[K, V], keys *[]K, lo K, hi K) {
 	if x == nil {
 		return
 	}
