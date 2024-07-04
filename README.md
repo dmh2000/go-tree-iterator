@@ -1,6 +1,6 @@
 # go-tree-iterator
 
-I was diddling with the new **iterator** scheme in Golang and thought of a test case that would help me understand it. So I did some implementation and testing of a version of an iterator for a binary search tree.
+I was diddling with the new **range over function iterator** scheme in Golang and thought of a test case that would help me understand it. So I did some implementation and testing of a version of an iterator for a binary search tree.
 
 Once I started on this effort, it kind of morphed into an exercise using AI to generate some or all of the code. That turned out to be really effective.
 
@@ -41,7 +41,7 @@ I tried two approaches:
   - I have been using Github Copilot extensively and it has really accerated my development time. By a lot.
   - Instead of a chat interface, I started implementing a Go version line by, modeled after the Java example.
 
-Conclusions
+### AI Versions
 
 - Github Copilot
 
@@ -55,9 +55,19 @@ Conclusions
   - The one thing that it differed from the Copilot version that instead of returning errors (for things like 'no such key'), it return a boolean, which I translated to 'ok' in the code.
   - It was clear that Gemini either used the link I gave it or it had already trained on this code because it almost word for word matched the Java version.
 
+### Conclusions
+
 Because of the Copilot line-by-line approach, that took quite a bit longer to finish. However, by doing it this way, I could see and understand what it was generating. Using the Gemini approach, I was lazy and didn't review the code other than what was needed to fix a few quirks.
 
+Once I was done, both implementations passed my minimal test cases.
+
+This brings up the issue of TDD and confidence in an AI generated solution. Is it trustworthy without a detailed manual review? Are the tests good enough to accept an AI generated solution? Does using an AI generator or helper mean that no human will know actually what its doing or how to fix or modify it?
+
+The time it took to code this stuff up was much faster than if I had done a manual line by line conversion. Or God forbid I had to crap out an RBT on my own.
+
 ## Implementing the Iterator
+
+Ok, back to implementing the Range over Function iterator.
 
 Iterating over a binary search tree is pretty simple, just do an inorder traversal and emit the key/value pairs. Something like this:
 
