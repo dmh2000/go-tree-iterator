@@ -1,9 +1,11 @@
-package tree
+package copilot
 
 import (
 	"fmt"
 
 	"golang.org/x/exp/constraints"
+
+	rbt "sqirvy.xyz/go-tree-iterator/rbt"
 )
 
 const red = true
@@ -12,17 +14,17 @@ const black = false
 // this implemention is derived directly from Sedgwick's Java implementation
 // derived from https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/RedBlackBST.java.html
 
-// CopilotNode represents a node in the red-black tree
-type CopilotNode[K constraints.Ordered, V any] struct {
-	key         K                  // key
-	val         V                  // value
-	left, right *CopilotNode[K, V] // links to left and right subtrees
-	color       bool               // color of parent link
-	size        int                // subtree count
+// Node represents a node in the red-black tree
+type Node[K constraints.Ordered, V any] struct {
+	key         K           // key
+	val         V           // value
+	left, right *Node[K, V] // links to left and right subtrees
+	color       bool        // color of parent link
+	size        int         // subtree count
 }
 
-func NewNode[K constraints.Ordered, V any](key K, val V, color bool, size int) *CopilotNode[K, V] {
-	return &CopilotNode[K, V]{
+func NewNode[K constraints.Ordered, V any](key K, val V, color bool, size int) *Node[K, V] {
+	return &Node[K, V]{
 		key:   key,
 		val:   val,
 		left:  nil,
@@ -33,7 +35,7 @@ func NewNode[K constraints.Ordered, V any](key K, val V, color bool, size int) *
 }
 
 // get color of a node
-func (n *CopilotNode[K, V]) IsRed() bool {
+func (n *Node[K, V]) IsRed() bool {
 	if n == nil {
 		return false
 	}
@@ -41,7 +43,7 @@ func (n *CopilotNode[K, V]) IsRed() bool {
 }
 
 // get size of a specified node
-func (n *CopilotNode[K, V]) Size() int {
+func (n *Node[K, V]) Size() int {
 	if n == nil {
 		return 0
 	}
@@ -50,11 +52,11 @@ func (n *CopilotNode[K, V]) Size() int {
 
 // CopilotRBT is a red-black tree
 type CopilotRBT[K constraints.Ordered, V any] struct {
-	root *CopilotNode[K, V]
+	root *Node[K, V]
 }
 
 // create a new red-black tree
-func NewCopilotRBT[K constraints.Ordered, V any]() *CopilotRBT[K, V] {
+func NewRBT[K constraints.Ordered, V any]() *CopilotRBT[K, V] {
 	return &CopilotRBT[K, V]{}
 }
 
@@ -84,7 +86,7 @@ func compare[T constraints.Ordered](a T, b T) int {
 }
 
 // get the value of a key from a specified subtree
-func (t *CopilotRBT[K, V]) get(x *CopilotNode[K, V], key K) (V, error) {
+func (t *CopilotRBT[K, V]) get(x *Node[K, V], key K) (V, error) {
 	if x == nil {
 		return t.root.val, fmt.Errorf("input node is nil")
 	}
@@ -119,7 +121,7 @@ func (t *CopilotRBT[K, V]) Put(key K, val V) {
 }
 
 // insert the key-value pair in the subtree rooted at h
-func (t *CopilotRBT[K, V]) put(h *CopilotNode[K, V], key K, val V) *CopilotNode[K, V] {
+func (t *CopilotRBT[K, V]) put(h *Node[K, V], key K, val V) *Node[K, V] {
 	if h == nil {
 		return NewNode(key, val, red, 1)
 	}
@@ -150,7 +152,7 @@ func (t *CopilotRBT[K, V]) put(h *CopilotNode[K, V], key K, val V) *CopilotNode[
 // ************ RBT helper functions ************
 
 // Red-Black Rotations
-func (t *CopilotRBT[K, V]) rotateRight(h *CopilotNode[K, V]) *CopilotNode[K, V] {
+func (t *CopilotRBT[K, V]) rotateRight(h *Node[K, V]) *Node[K, V] {
 	x := h.left
 	h.left = x.right
 	x.right = h
@@ -161,7 +163,7 @@ func (t *CopilotRBT[K, V]) rotateRight(h *CopilotNode[K, V]) *CopilotNode[K, V] 
 	return x
 }
 
-func (t *CopilotRBT[K, V]) rotateLeft(h *CopilotNode[K, V]) *CopilotNode[K, V] {
+func (t *CopilotRBT[K, V]) rotateLeft(h *Node[K, V]) *Node[K, V] {
 	x := h.right
 	h.right = x.left
 	x.left = h
@@ -172,7 +174,7 @@ func (t *CopilotRBT[K, V]) rotateLeft(h *CopilotNode[K, V]) *CopilotNode[K, V] {
 	return x
 }
 
-func (t *CopilotRBT[K, V]) flipColors(h *CopilotNode[K, V]) {
+func (t *CopilotRBT[K, V]) flipColors(h *Node[K, V]) {
 	h.color = !h.color
 	h.left.color = !h.left.color
 	h.right.color = !h.right.color
@@ -190,7 +192,7 @@ func (t *CopilotRBT[K, V]) Min() (K, error) {
 	return n.key, nil
 }
 
-func (t *CopilotRBT[K, V]) min(x *CopilotNode[K, V]) (*CopilotNode[K, V], error) {
+func (t *CopilotRBT[K, V]) min(x *Node[K, V]) (*Node[K, V], error) {
 	if x.left == nil {
 		return x, nil
 	}
@@ -208,7 +210,7 @@ func (t *CopilotRBT[K, V]) Max() (K, error) {
 	return n.key, nil
 }
 
-func (t *CopilotRBT[K, V]) max(x *CopilotNode[K, V]) (*CopilotNode[K, V], error) {
+func (t *CopilotRBT[K, V]) max(x *Node[K, V]) (*Node[K, V], error) {
 	if x.right == nil {
 		return x, nil
 	}
@@ -228,7 +230,7 @@ func (t *CopilotRBT[K, V]) Floor(key K) (K, error) {
 }
 
 // the largest key in the subtree rooted at x less than or equal to the given key
-func (t *CopilotRBT[K, V]) floor(x *CopilotNode[K, V], key K) (*CopilotNode[K, V], error) {
+func (t *CopilotRBT[K, V]) floor(x *Node[K, V], key K) (*Node[K, V], error) {
 	if x == nil {
 		return x, fmt.Errorf("input node is nil")
 	}
@@ -264,7 +266,7 @@ func (t *CopilotRBT[K, V]) Ceiling(key K) (K, error) {
 }
 
 // the smallest key in the subtree rooted at x greater than or equal to the given key
-func (t *CopilotRBT[K, V]) ceiling(x *CopilotNode[K, V], key K) (*CopilotNode[K, V], error) {
+func (t *CopilotRBT[K, V]) ceiling(x *Node[K, V], key K) (*Node[K, V], error) {
 	if x == nil {
 		return x, fmt.Errorf("input node is nil")
 	}
@@ -315,7 +317,7 @@ func (t *CopilotRBT[K, V]) KeysRange(lo K, hi K) []K {
 }
 
 // add the keys between lo and hi to the queue
-func (t *CopilotRBT[K, V]) keys(x *CopilotNode[K, V], keys *[]K, lo K, hi K) {
+func (t *CopilotRBT[K, V]) keys(x *Node[K, V], keys *[]K, lo K, hi K) {
 	if x == nil {
 		return
 	}
@@ -329,5 +331,37 @@ func (t *CopilotRBT[K, V]) keys(x *CopilotNode[K, V], keys *[]K, lo K, hi K) {
 	}
 	if cmphi > 0 {
 		t.keys(x.right, keys, lo, hi)
+	}
+}
+
+func (bst *CopilotRBT[K, V]) GetAll() []rbt.KeyValuePair[K, V] {
+	pairs := make([]rbt.KeyValuePair[K, V], 0)
+	var inorder func(*Node[K, V])
+	inorder = func(n *Node[K, V]) {
+		if n == nil {
+			return
+		}
+		inorder(n.left)
+		pairs = append(pairs, rbt.KeyValuePair[K, V]{Key: n.key, Val: n.val})
+		inorder(n.right)
+	}
+	inorder(bst.root)
+	return pairs
+}
+
+func (t *CopilotRBT[K, V]) Iterator() func(yield func(K, V) bool) {
+	return func(yield func(K, V) bool) {
+		var inorder func(*Node[K, V])
+		inorder = func(n *Node[K, V]) {
+			if n == nil {
+				return
+			}
+			inorder(n.left)
+			if !yield(n.key, n.val) {
+				return
+			}
+			inorder(n.right)
+		}
+		inorder(t.root)
 	}
 }

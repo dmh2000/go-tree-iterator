@@ -1,4 +1,4 @@
-package tree
+package gemini
 
 import (
 	"math/rand"
@@ -7,14 +7,14 @@ import (
 )
 
 func TestEmptyGeminiRbt(t *testing.T) {
-	bst := NewGeminiRBT[int, string]()
+	bst := NewRBT[int, string]()
 	if !bst.IsEmpty() {
 		t.Errorf("IsEmpty() == %v; want true", bst.IsEmpty())
 	}
 }
 
 func TestPutOneGeminiRbt(t *testing.T) {
-	bst := NewGeminiRBT[int, string]()
+	bst := NewRBT[int, string]()
 	bst.Put(1, "one")
 	if bst.IsEmpty() {
 		t.Errorf("IsEmpty() == %v; want false", bst.IsEmpty())
@@ -30,7 +30,7 @@ func TestPutOneGeminiRbt(t *testing.T) {
 }
 
 func TestPutThreeGeminiRbt(t *testing.T) {
-	bst := NewGeminiRBT[int, string]()
+	bst := NewRBT[int, string]()
 	bst.Put(1, "one")
 	bst.Put(2, "two")
 	bst.Put(3, "three")
@@ -40,7 +40,7 @@ func TestPutThreeGeminiRbt(t *testing.T) {
 }
 
 func TestContains3GeminiRbt(t *testing.T) {
-	bst := NewGeminiRBT[int, string]()
+	bst := NewRBT[int, string]()
 	bst.Put(1, "one")
 	bst.Put(2, "two")
 	bst.Put(3, "three")
@@ -64,7 +64,7 @@ func TestContains3GeminiRbt(t *testing.T) {
 
 // test that the keys are returned in order
 func TestContainsKeysGeminiRbt(t *testing.T) {
-	bst := NewGeminiRBT[int, string]()
+	bst := NewRBT[int, string]()
 	bst.Put(1, "one")
 	bst.Put(2, "two")
 	bst.Put(3, "three")
@@ -97,7 +97,7 @@ func TestContainsKeysGeminiRbt(t *testing.T) {
 
 // create a map of random keys and values
 func TestRandomKeysSgbtRbt(t *testing.T) {
-	bst := NewGeminiRBT[int, string]()
+	bst := NewRBT[int, string]()
 	keys := make([]int, 100)
 	values := make([]string, 100)
 	for i := range keys {
@@ -122,14 +122,14 @@ func TestRandomKeysSgbtRbt(t *testing.T) {
 
 // test the BSTIterator
 func TestBSTIteratorSgbtRbt(t *testing.T) {
-	bst := NewGeminiRBT[int, string]()
+	bst := NewRBT[int, string]()
 	bst.Put(1, "one")
 	bst.Put(2, "two")
 	bst.Put(3, "three")
 
 	keys := make([]int, 0)
 	values := make([]string, 0)
-	bst.GeminiIterator()(func(k int, v string) bool {
+	bst.Iterator()(func(k int, v string) bool {
 		keys = append(keys, k)
 		values = append(values, v)
 		return true
@@ -148,7 +148,7 @@ func TestBSTIteratorSgbtRbt(t *testing.T) {
 
 // test the BSTIterator with a large number of random keys
 func TestSgbtIteratorRandom(t *testing.T) {
-	bst := NewGeminiRBT[int, string]()
+	bst := NewRBT[int, string]()
 
 	m := make(map[int]string)
 	for i := 0; i < 100; i++ {
@@ -168,7 +168,7 @@ func TestSgbtIteratorRandom(t *testing.T) {
 	keys2 := make([]int, 0)
 	values2 := make([]string, 0)
 
-	iter := bst.GeminiIterator()
+	iter := bst.Iterator()
 	iter(func(k int, v string) bool {
 		keys2 = append(keys2, k)
 		values2 = append(values2, v)

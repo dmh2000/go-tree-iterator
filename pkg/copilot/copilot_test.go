@@ -1,4 +1,4 @@
-package tree
+package copilot
 
 import (
 	"math/rand"
@@ -7,21 +7,21 @@ import (
 )
 
 func TestCreateRBT(t *testing.T) {
-	bst := NewCopilotRBT[int, string]()
+	bst := NewRBT[int, string]()
 	if bst == nil {
 		t.Errorf("NewGeminiRBT() = %v; want a new red-black tree", bst)
 	}
 }
 
 func TestEmptyRBT(t *testing.T) {
-	bst := NewCopilotRBT[int, string]()
+	bst := NewRBT[int, string]()
 	if !bst.IsEmpty() {
 		t.Errorf("IsEmpty() == %v; want true", bst.IsEmpty())
 	}
 }
 
 func TestPutOneRBT(t *testing.T) {
-	bst := NewCopilotRBT[int, string]()
+	bst := NewRBT[int, string]()
 	bst.Put(1, "one")
 	if bst.IsEmpty() {
 		t.Errorf("IsEmpty() == %v; want false", bst.IsEmpty())
@@ -37,7 +37,7 @@ func TestPutOneRBT(t *testing.T) {
 }
 
 func TestPutThreeRBT(t *testing.T) {
-	bst := NewCopilotRBT[int, string]()
+	bst := NewRBT[int, string]()
 	bst.Put(1, "one")
 	bst.Put(2, "two")
 	bst.Put(3, "three")
@@ -47,7 +47,7 @@ func TestPutThreeRBT(t *testing.T) {
 }
 
 func TestContains3RBT(t *testing.T) {
-	bst := NewCopilotRBT[int, string]()
+	bst := NewRBT[int, string]()
 	bst.Put(1, "one")
 	bst.Put(2, "two")
 	bst.Put(3, "three")
@@ -71,7 +71,7 @@ func TestContains3RBT(t *testing.T) {
 
 // test that the keys are returned in order
 func TestContainsKeys(t *testing.T) {
-	bst := NewCopilotRBT[int, string]()
+	bst := NewRBT[int, string]()
 	bst.Put(1, "one")
 	bst.Put(2, "two")
 	bst.Put(3, "three")
@@ -103,7 +103,7 @@ func TestContainsKeys(t *testing.T) {
 
 // create a map of random keys and values
 func TestRandomKeys(t *testing.T) {
-	bst := NewCopilotRBT[int, string]()
+	bst := NewRBT[int, string]()
 	keys := make([]int, 100)
 	values := make([]string, 100)
 	for i := range keys {
@@ -128,14 +128,14 @@ func TestRandomKeys(t *testing.T) {
 
 // test the BSTIterator
 func TestBSTIterator(t *testing.T) {
-	bst := NewCopilotRBT[int, string]()
+	bst := NewRBT[int, string]()
 	bst.Put(1, "one")
 	bst.Put(2, "two")
 	bst.Put(3, "three")
 
 	keys := make([]int, 0)
 	values := make([]string, 0)
-	bst.CopilotIterator()(func(k int, v string) bool {
+	bst.Iterator()(func(k int, v string) bool {
 		keys = append(keys, k)
 		values = append(values, v)
 		return true
@@ -154,7 +154,7 @@ func TestBSTIterator(t *testing.T) {
 
 // test the BSTIterator with a large number of random keys
 func TestBSTIteratorRandom(t *testing.T) {
-	bst := NewCopilotRBT[int, string]()
+	bst := NewRBT[int, string]()
 
 	m := make(map[int]string)
 	for i := 0; i < 100; i++ {
@@ -174,7 +174,7 @@ func TestBSTIteratorRandom(t *testing.T) {
 	keys2 := make([]int, 0)
 	values2 := make([]string, 0)
 
-	iter := bst.CopilotIterator()
+	iter := bst.Iterator()
 	iter(func(k int, v string) bool {
 		keys2 = append(keys2, k)
 		values2 = append(values2, v)

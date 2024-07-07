@@ -1,4 +1,4 @@
-module sqirvy.xyz/go-tree-iterator/tree
+module sqirvy.xyz/go-tree-iterator/chatgpt
 
 go 1.22.2
 

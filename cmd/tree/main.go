@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 
-	tree "sqirvy.xyz/go-tree-iterator/tree"
+	cp "sqirvy.xyz/go-tree-iterator/copilot"
+	gm "sqirvy.xyz/go-tree-iterator/gemini"
 )
 
 func copilot() {
 
 	// create a new red-black tree
-	bst := tree.NewCopilotRBT[int, string]()
+	bst := cp.NewRBT[int, string]()
 
 	// create a list of  key/value pairs in a random order
 	kvs := []struct {
@@ -30,7 +31,7 @@ func copilot() {
 	}
 
 	// iterate over the tree in order
-	iter := bst.CopilotIterator()
+	iter := bst.Iterator()
 	iter(func(k int, v string) bool {
 		fmt.Println(k, v)
 		return true
@@ -40,7 +41,7 @@ func copilot() {
 func gemini() {
 
 	// create a new red-black tree
-	bst := tree.NewGeminiRBT[int, string]()
+	bst := gm.NewRBT[int, string]()
 
 	// create a list of  key/value pairs in a random order
 	kvs := []struct {
@@ -61,7 +62,7 @@ func gemini() {
 	}
 
 	// iterate over the tree in order
-	iter := bst.GeminiIterator()
+	iter := bst.Iterator()
 	iter(func(k int, v string) bool {
 		fmt.Println(k, v)
 		return true
