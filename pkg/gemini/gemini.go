@@ -593,7 +593,7 @@ func (bst *GeminiRbt[K, V]) GetAll() []rbt.KeyValuePair[K, V] {
 	return pairs
 }
 
-func (t *GeminiRbt[K, V]) Iterator() func(yield func(rbt.KeyValuePair[K, V]) bool) {
+func (t *GeminiRbt[K, V]) Iterator() func(func(rbt.KeyValuePair[K, V]) bool) {
 	return func(yield func(rbt.KeyValuePair[K, V]) bool) {
 		var inorder func(*Node[K, V])
 		inorder = func(n *Node[K, V]) {
