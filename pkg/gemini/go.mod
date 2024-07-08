@@ -1,5 +1,5 @@
 module sqirvy.xyz/go-tree-iterator/gemini
 
-go 1.22.2
+go 1.22.5
 
-require golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8
+require golang.org/x/exp v0.0.0-20240707233637-46b078467d37

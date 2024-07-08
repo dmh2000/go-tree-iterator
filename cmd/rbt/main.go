@@ -44,7 +44,7 @@ func runRbt(s string, t rbt.RBT[int, string]) {
 }
 
 func main() {
-	runRbt("Copilot", cp.NewRBT[int, string]())
-	runRbt("Getmini", gm.NewRBT[int, string]())
-	runRbt("ChatGpt", ch.NewRBT[int, string]())
+	runRbt("=== Copilot ===", cp.NewRBT[int, string]())
+	runRbt("=== Gemini ===", gm.NewRBT[int, string]())
+	runRbt("=== ChatGpt ===", ch.NewRBT[int, string]())
 }
