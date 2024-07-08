@@ -390,15 +390,15 @@ func (bst *RBT[K, V]) GetAll() []rbt.KeyValuePair[K, V] {
 	return pairs
 }
 
-func (t *RBT[K, V]) Iterator() func(yield func(K, V) bool) {
-	return func(yield func(K, V) bool) {
+func (t *RBT[K, V]) Iterator() func(yield func(rbt.KeyValuePair[K, V]) bool) {
+	return func(yield func(rbt.KeyValuePair[K, V]) bool) {
 		var inorder func(*Node[K, V])
 		inorder = func(n *Node[K, V]) {
 			if n == nil {
 				return
 			}
 			inorder(n.left)
-			if !yield(n.key, n.val) {
+			if !yield(rbt.KeyValuePair[K, V]{Key: n.key, Val: n.val}) {
 				return
 			}
 			inorder(n.right)

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	ch "sqirvy.xyz/go-tree-iterator/chatgpt"
 	cp "sqirvy.xyz/go-tree-iterator/copilot"
 	gm "sqirvy.xyz/go-tree-iterator/gemini"
 	rbt "sqirvy.xyz/go-tree-iterator/rbt"
@@ -28,13 +29,13 @@ func runRbt(s string, t rbt.RBT[int, string]) {
 		t.Put(kv.k, kv.v)
 	}
 
-	fmt.Println(s, "Gemini Iterator")
+	fmt.Println(s, "Iterator")
 	// iterate over the tree in order
 	for r := range t.Iterator() {
 		fmt.Println(r)
 	}
 
-	fmt.Println(s, "GeminiGetAll")
+	fmt.Println(s, "GetAll")
 	a := t.GetAll()
 	for _, r := range a {
 		fmt.Println(r)
@@ -43,6 +44,7 @@ func runRbt(s string, t rbt.RBT[int, string]) {
 }
 
 func main() {
-	runRbt("Getmini", gm.NewRBT[int, string]())
 	runRbt("Copilot", cp.NewRBT[int, string]())
+	runRbt("Getmini", gm.NewRBT[int, string]())
+	runRbt("ChatGpt", ch.NewRBT[int, string]())
 }

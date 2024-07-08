@@ -6,14 +6,14 @@ import (
 	"testing"
 )
 
-func TestEmptyCopilotRbt(t *testing.T) {
+func TestEmptyRbt(t *testing.T) {
 	rbt := NewRBT[int, string]()
 	if !rbt.IsEmpty() {
 		t.Errorf("IsEmpty() == %v; want true", rbt.IsEmpty())
 	}
 }
 
-func TestPutOneCopilotRbt(t *testing.T) {
+func TestPutOneRbt(t *testing.T) {
 	rbt := NewRBT[int, string]()
 	rbt.Put(1, "one")
 	if rbt.IsEmpty() {
@@ -29,7 +29,7 @@ func TestPutOneCopilotRbt(t *testing.T) {
 	}
 }
 
-func TestPutThreeCopilotRbt(t *testing.T) {
+func TestPutThreeRbt(t *testing.T) {
 	rbt := NewRBT[int, string]()
 	rbt.Put(1, "one")
 	rbt.Put(2, "two")
@@ -39,7 +39,7 @@ func TestPutThreeCopilotRbt(t *testing.T) {
 	}
 }
 
-func TestContains3CopilotRbt(t *testing.T) {
+func TestContains3Rbt(t *testing.T) {
 	rbt := NewRBT[int, string]()
 	rbt.Put(1, "one")
 	rbt.Put(2, "two")
@@ -63,7 +63,7 @@ func TestContains3CopilotRbt(t *testing.T) {
 }
 
 // test that the keys are returned in order
-func TestContainsKeysCopilotRbt(t *testing.T) {
+func TestContainsKeysRbt(t *testing.T) {
 	rbt := NewRBT[int, string]()
 	rbt.Put(1, "one")
 	rbt.Put(2, "two")
@@ -96,7 +96,7 @@ func TestContainsKeysCopilotRbt(t *testing.T) {
 }
 
 // create a map of random keys and values
-func TestRandomKeysCopilottRbt(t *testing.T) {
+func TestRandomKeystRbt(t *testing.T) {
 	rbt := NewRBT[int, string]()
 	keys := make([]int, 100)
 	values := make([]string, 100)
@@ -120,12 +120,12 @@ func TestRandomKeysCopilottRbt(t *testing.T) {
 	}
 }
 
-// test the BSTIterator with a large number of random keys
-func TestCopilottIteratorRandom(t *testing.T) {
+// test the Iterator with a large number of random keys
+func TestIteratorRandom(t *testing.T) {
 	rbt := NewRBT[int, string]()
 
 	m := make(map[int]string)
-	for i := 0; i < 0; i++ {
+	for i := 0; i < 100; i++ {
 		k := rand.Intn(100)
 		v := strconv.Itoa(k)
 		m[k] = v
@@ -138,5 +138,12 @@ func TestCopilottIteratorRandom(t *testing.T) {
 		rbt.Put(k, v)
 	}
 
-	// iterate over the BST and get the keys in order
+	k := -1
+	for r := range rbt.Iterator() {
+		if r.Key < k {
+			t.Errorf("Out of order(%v) = %v; ", k, r.Key)
+		}
+		t.Log(r.Key, r.Val)
+		k = r.Key
+	}
 }
