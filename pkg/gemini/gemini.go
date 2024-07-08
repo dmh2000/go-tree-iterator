@@ -17,26 +17,26 @@ type Node[K constraints.Ordered, V any] struct {
 	N           int // subtree count
 }
 
-// GeminiRBT represents a Red-Black BST.
-type GeminiRBT[K constraints.Ordered, V any] struct {
+// GeminiRbt represents a Red-Black BST.
+type GeminiRbt[K constraints.Ordered, V any] struct {
 	root *Node[K, V]
 }
 
-func NewRBT[K constraints.Ordered, V any]() *GeminiRBT[K, V] {
-	return &GeminiRBT[K, V]{}
+func NewRBT[K constraints.Ordered, V any]() *GeminiRbt[K, V] {
+	return &GeminiRbt[K, V]{}
 }
 
 // isEmpty returns true if the BST is empty.
-func (bst *GeminiRBT[K, V]) IsEmpty() bool {
+func (bst *GeminiRbt[K, V]) IsEmpty() bool {
 	return bst.root == nil
 }
 
 // size returns the number of key-value pairs in the BST.
-func (bst *GeminiRBT[K, V]) Size() int {
+func (bst *GeminiRbt[K, V]) Size() int {
 	return bst.size(bst.root)
 }
 
-func (bst *GeminiRBT[K, V]) size(x *Node[K, V]) int {
+func (bst *GeminiRbt[K, V]) size(x *Node[K, V]) int {
 	if x == nil {
 		return 0
 	}
@@ -44,7 +44,7 @@ func (bst *GeminiRBT[K, V]) size(x *Node[K, V]) int {
 }
 
 // get returns the value associated with the given key.
-func (bst *GeminiRBT[K, V]) Get(key K) (V, bool) {
+func (bst *GeminiRbt[K, V]) Get(key K) (V, bool) {
 	x := bst.get(bst.root, key)
 	if x == nil {
 		var zero V
@@ -53,7 +53,7 @@ func (bst *GeminiRBT[K, V]) Get(key K) (V, bool) {
 	return x.val, true
 }
 
-func (bst *GeminiRBT[K, V]) get(x *Node[K, V], key K) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) get(x *Node[K, V], key K) *Node[K, V] {
 	for x != nil {
 		switch {
 		case key < x.key:
@@ -68,11 +68,11 @@ func (bst *GeminiRBT[K, V]) get(x *Node[K, V], key K) *Node[K, V] {
 }
 
 // put inserts the key-value pair into the BST.
-func (bst *GeminiRBT[K, V]) Put(key K, val V) {
+func (bst *GeminiRbt[K, V]) Put(key K, val V) {
 	bst.root = bst.put(bst.root, key, val)
 }
 
-func (bst *GeminiRBT[K, V]) put(h *Node[K, V], key K, val V) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) put(h *Node[K, V], key K, val V) *Node[K, V] {
 	if h == nil {
 		return &Node[K, V]{key: key, val: val, color: false, N: 1}
 	}
@@ -99,7 +99,7 @@ func (bst *GeminiRBT[K, V]) put(h *Node[K, V], key K, val V) *Node[K, V] {
 }
 
 // min returns the smallest key in the BST.
-func (bst *GeminiRBT[K, V]) Min() (K, bool) {
+func (bst *GeminiRbt[K, V]) Min() (K, bool) {
 	x := bst.min(bst.root)
 	if x == nil {
 		var zero K
@@ -108,7 +108,7 @@ func (bst *GeminiRBT[K, V]) Min() (K, bool) {
 	return x.key, true
 }
 
-func (bst *GeminiRBT[K, V]) min(x *Node[K, V]) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) min(x *Node[K, V]) *Node[K, V] {
 	if x == nil {
 		return nil
 	}
@@ -119,7 +119,7 @@ func (bst *GeminiRBT[K, V]) min(x *Node[K, V]) *Node[K, V] {
 }
 
 // max returns the largest key in the BST.
-func (bst *GeminiRBT[K, V]) Max() (K, bool) {
+func (bst *GeminiRbt[K, V]) Max() (K, bool) {
 	x := bst.max(bst.root)
 	if x == nil {
 		var zero K
@@ -128,7 +128,7 @@ func (bst *GeminiRBT[K, V]) Max() (K, bool) {
 	return x.key, true
 }
 
-func (bst *GeminiRBT[K, V]) max(x *Node[K, V]) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) max(x *Node[K, V]) *Node[K, V] {
 	if x == nil {
 		return nil
 	}
@@ -139,7 +139,7 @@ func (bst *GeminiRBT[K, V]) max(x *Node[K, V]) *Node[K, V] {
 }
 
 // floor returns the largest key less than or equal to the given key.
-func (bst *GeminiRBT[K, V]) Floor(key K) (K, bool) {
+func (bst *GeminiRbt[K, V]) Floor(key K) (K, bool) {
 	x := bst.floor(bst.root, key)
 	if x == nil {
 		var zero K
@@ -148,7 +148,7 @@ func (bst *GeminiRBT[K, V]) Floor(key K) (K, bool) {
 	return x.key, true
 }
 
-func (bst *GeminiRBT[K, V]) floor(x *Node[K, V], key K) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) floor(x *Node[K, V], key K) *Node[K, V] {
 	if x == nil {
 		return nil
 	}
@@ -167,7 +167,7 @@ func (bst *GeminiRBT[K, V]) floor(x *Node[K, V], key K) *Node[K, V] {
 }
 
 // ceiling returns the smallest key greater than or equal to the given key.
-func (bst *GeminiRBT[K, V]) Ceiling(key K) (K, bool) {
+func (bst *GeminiRbt[K, V]) Ceiling(key K) (K, bool) {
 	x := bst.ceiling(bst.root, key)
 	if x == nil {
 		var zero K
@@ -176,7 +176,7 @@ func (bst *GeminiRBT[K, V]) Ceiling(key K) (K, bool) {
 	return x.key, true
 }
 
-func (bst *GeminiRBT[K, V]) ceiling(x *Node[K, V], key K) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) ceiling(x *Node[K, V], key K) *Node[K, V] {
 	if x == nil {
 		return nil
 	}
@@ -195,7 +195,7 @@ func (bst *GeminiRBT[K, V]) ceiling(x *Node[K, V], key K) *Node[K, V] {
 }
 
 // select returns the key of rank k.
-func (bst *GeminiRBT[K, V]) Select(k int) (K, bool) {
+func (bst *GeminiRbt[K, V]) Select(k int) (K, bool) {
 	x := bst.selectKey(bst.root, k)
 	if x == nil {
 		var zero K
@@ -204,7 +204,7 @@ func (bst *GeminiRBT[K, V]) Select(k int) (K, bool) {
 	return x.key, true
 }
 
-func (bst *GeminiRBT[K, V]) selectKey(x *Node[K, V], k int) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) selectKey(x *Node[K, V], k int) *Node[K, V] {
 	if x == nil {
 		return nil
 	}
@@ -220,11 +220,11 @@ func (bst *GeminiRBT[K, V]) selectKey(x *Node[K, V], k int) *Node[K, V] {
 }
 
 // rank returns the number of keys less than key.
-func (bst *GeminiRBT[K, V]) Rank(key K) int {
+func (bst *GeminiRbt[K, V]) Rank(key K) int {
 	return bst.rank(bst.root, key)
 }
 
-func (bst *GeminiRBT[K, V]) rank(x *Node[K, V], key K) int {
+func (bst *GeminiRbt[K, V]) rank(x *Node[K, V], key K) int {
 	if x == nil {
 		return 0
 	}
@@ -239,11 +239,11 @@ func (bst *GeminiRBT[K, V]) rank(x *Node[K, V], key K) int {
 }
 
 // deleteMin deletes the smallest key in the BST.
-func (bst *GeminiRBT[K, V]) DeleteMin() {
+func (bst *GeminiRbt[K, V]) DeleteMin() {
 	bst.root = bst.deleteMin(bst.root)
 }
 
-func (bst *GeminiRBT[K, V]) deleteMin(h *Node[K, V]) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) deleteMin(h *Node[K, V]) *Node[K, V] {
 	if h.left == nil {
 		return h.right
 	}
@@ -255,11 +255,11 @@ func (bst *GeminiRBT[K, V]) deleteMin(h *Node[K, V]) *Node[K, V] {
 }
 
 // deleteMax deletes the largest key in the BST.
-func (bst *GeminiRBT[K, V]) DeleteMax() {
+func (bst *GeminiRbt[K, V]) DeleteMax() {
 	bst.root = bst.deleteMax(bst.root)
 }
 
-func (bst *GeminiRBT[K, V]) deleteMax(h *Node[K, V]) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) deleteMax(h *Node[K, V]) *Node[K, V] {
 	if isRed(h.left) {
 		h = bst.rotateRight(h)
 	}
@@ -274,11 +274,11 @@ func (bst *GeminiRBT[K, V]) deleteMax(h *Node[K, V]) *Node[K, V] {
 }
 
 // delete deletes the key-value pair with the given key.
-func (bst *GeminiRBT[K, V]) Delete(key K) {
+func (bst *GeminiRbt[K, V]) Delete(key K) {
 	bst.root = bst.delete(bst.root, key)
 }
 
-func (bst *GeminiRBT[K, V]) delete(h *Node[K, V], key K) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) delete(h *Node[K, V], key K) *Node[K, V] {
 	if h == nil {
 		return nil
 	}
@@ -310,13 +310,13 @@ func (bst *GeminiRBT[K, V]) delete(h *Node[K, V], key K) *Node[K, V] {
 }
 
 // keys returns an iterator over the keys in the BST in ascending order.
-func (bst *GeminiRBT[K, V]) Keys() []K {
+func (bst *GeminiRbt[K, V]) Keys() []K {
 	queue := make([]K, 0)
 	bst.keys(bst.root, &queue)
 	return queue
 }
 
-func (bst *GeminiRBT[K, V]) keys(x *Node[K, V], queue *[]K) {
+func (bst *GeminiRbt[K, V]) keys(x *Node[K, V], queue *[]K) {
 	if x == nil {
 		return
 	}
@@ -326,13 +326,13 @@ func (bst *GeminiRBT[K, V]) keys(x *Node[K, V], queue *[]K) {
 }
 
 // keys returns an iterator over the keys in the BST in ascending order.
-func (bst *GeminiRBT[K, V]) KeysInOrder() []K {
+func (bst *GeminiRbt[K, V]) KeysInOrder() []K {
 	queue := make([]K, 0)
 	bst.keysInOrder(bst.root, &queue)
 	return queue
 }
 
-func (bst *GeminiRBT[K, V]) keysInOrder(x *Node[K, V], queue *[]K) {
+func (bst *GeminiRbt[K, V]) keysInOrder(x *Node[K, V], queue *[]K) {
 	if x == nil {
 		return
 	}
@@ -342,13 +342,13 @@ func (bst *GeminiRBT[K, V]) keysInOrder(x *Node[K, V], queue *[]K) {
 }
 
 // keys returns an iterator over the keys in the BST in level order.
-func (bst *GeminiRBT[K, V]) KeysLevelOrder() []K {
+func (bst *GeminiRbt[K, V]) KeysLevelOrder() []K {
 	queue := make([]K, 0)
 	bst.keysLevelOrder(bst.root, &queue)
 	return queue
 }
 
-func (bst *GeminiRBT[K, V]) keysLevelOrder(x *Node[K, V], queue *[]K) {
+func (bst *GeminiRbt[K, V]) keysLevelOrder(x *Node[K, V], queue *[]K) {
 	if x == nil {
 		return
 	}
@@ -367,13 +367,13 @@ func (bst *GeminiRBT[K, V]) keysLevelOrder(x *Node[K, V], queue *[]K) {
 }
 
 // keys returns an iterator over the keys in the BST in pre order.
-func (bst *GeminiRBT[K, V]) KeysPreOrder() []K {
+func (bst *GeminiRbt[K, V]) KeysPreOrder() []K {
 	queue := make([]K, 0)
 	bst.keysPreOrder(bst.root, &queue)
 	return queue
 }
 
-func (bst *GeminiRBT[K, V]) keysPreOrder(x *Node[K, V], queue *[]K) {
+func (bst *GeminiRbt[K, V]) keysPreOrder(x *Node[K, V], queue *[]K) {
 	if x == nil {
 		return
 	}
@@ -383,13 +383,13 @@ func (bst *GeminiRBT[K, V]) keysPreOrder(x *Node[K, V], queue *[]K) {
 }
 
 // keys returns an iterator over the keys in the BST in post order.
-func (bst *GeminiRBT[K, V]) KeysPostOrder() []K {
+func (bst *GeminiRbt[K, V]) KeysPostOrder() []K {
 	queue := make([]K, 0)
 	bst.keysPostOrder(bst.root, &queue)
 	return queue
 }
 
-func (bst *GeminiRBT[K, V]) keysPostOrder(x *Node[K, V], queue *[]K) {
+func (bst *GeminiRbt[K, V]) keysPostOrder(x *Node[K, V], queue *[]K) {
 	if x == nil {
 		return
 	}
@@ -407,7 +407,7 @@ func isRed[K constraints.Ordered, V any](x *Node[K, V]) bool {
 }
 
 // rotateLeft performs a left rotation.
-func (bst *GeminiRBT[K, V]) rotateLeft(h *Node[K, V]) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) rotateLeft(h *Node[K, V]) *Node[K, V] {
 	x := h.right
 	h.right = x.left
 	x.left = h
@@ -419,7 +419,7 @@ func (bst *GeminiRBT[K, V]) rotateLeft(h *Node[K, V]) *Node[K, V] {
 }
 
 // rotateRight performs a right rotation.
-func (bst *GeminiRBT[K, V]) rotateRight(h *Node[K, V]) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) rotateRight(h *Node[K, V]) *Node[K, V] {
 	x := h.left
 	h.left = x.right
 	x.right = h
@@ -431,14 +431,14 @@ func (bst *GeminiRBT[K, V]) rotateRight(h *Node[K, V]) *Node[K, V] {
 }
 
 // flipColors flips the colors of a node and its two children.
-func (bst *GeminiRBT[K, V]) flipColors(h *Node[K, V]) {
+func (bst *GeminiRbt[K, V]) flipColors(h *Node[K, V]) {
 	h.color = !h.color
 	h.left.color = !h.left.color
 	h.right.color = !h.right.color
 }
 
 // moveRedLeft moves a red link to the left.
-func (bst *GeminiRBT[K, V]) moveRedLeft(h *Node[K, V]) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) moveRedLeft(h *Node[K, V]) *Node[K, V] {
 	bst.flipColors(h)
 	if isRed(h.right.left) {
 		h.right = bst.rotateRight(h.right)
@@ -449,7 +449,7 @@ func (bst *GeminiRBT[K, V]) moveRedLeft(h *Node[K, V]) *Node[K, V] {
 }
 
 // moveRedRight moves a red link to the right.
-func (bst *GeminiRBT[K, V]) moveRedRight(h *Node[K, V]) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) moveRedRight(h *Node[K, V]) *Node[K, V] {
 	bst.flipColors(h)
 	if isRed(h.left.left) {
 		h = bst.rotateRight(h)
@@ -459,7 +459,7 @@ func (bst *GeminiRBT[K, V]) moveRedRight(h *Node[K, V]) *Node[K, V] {
 }
 
 // balance restores red-black tree invariant.
-func (bst *GeminiRBT[K, V]) balance(h *Node[K, V]) *Node[K, V] {
+func (bst *GeminiRbt[K, V]) balance(h *Node[K, V]) *Node[K, V] {
 	if isRed(h.right) {
 		h = bst.rotateLeft(h)
 	}
@@ -474,11 +474,11 @@ func (bst *GeminiRBT[K, V]) balance(h *Node[K, V]) *Node[K, V] {
 }
 
 // Print prints the BST in level order.
-func (bst *GeminiRBT[K, V]) Print() {
+func (bst *GeminiRbt[K, V]) Print() {
 	bst.print(bst.root, 0)
 }
 
-func (bst *GeminiRBT[K, V]) print(x *Node[K, V], depth int) {
+func (bst *GeminiRbt[K, V]) print(x *Node[K, V], depth int) {
 	if x == nil {
 		return
 	}
@@ -495,11 +495,11 @@ func (bst *GeminiRBT[K, V]) print(x *Node[K, V], depth int) {
 }
 
 // PrintInOrder prints the BST in inorder.
-func (bst *GeminiRBT[K, V]) PrintInOrder() {
+func (bst *GeminiRbt[K, V]) PrintInOrder() {
 	bst.printInOrder(bst.root)
 }
 
-func (bst *GeminiRBT[K, V]) printInOrder(x *Node[K, V]) {
+func (bst *GeminiRbt[K, V]) printInOrder(x *Node[K, V]) {
 	if x == nil {
 		return
 	}
@@ -509,11 +509,11 @@ func (bst *GeminiRBT[K, V]) printInOrder(x *Node[K, V]) {
 }
 
 // PrintPreOrder prints the BST in preorder.
-func (bst *GeminiRBT[K, V]) PrintPreOrder() {
+func (bst *GeminiRbt[K, V]) PrintPreOrder() {
 	bst.printPreOrder(bst.root)
 }
 
-func (bst *GeminiRBT[K, V]) printPreOrder(x *Node[K, V]) {
+func (bst *GeminiRbt[K, V]) printPreOrder(x *Node[K, V]) {
 	if x == nil {
 		return
 	}
@@ -523,11 +523,11 @@ func (bst *GeminiRBT[K, V]) printPreOrder(x *Node[K, V]) {
 }
 
 // PrintPostOrder prints the BST in postorder.
-func (bst *GeminiRBT[K, V]) PrintPostOrder() {
+func (bst *GeminiRbt[K, V]) PrintPostOrder() {
 	bst.printPostOrder(bst.root)
 }
 
-func (bst *GeminiRBT[K, V]) printPostOrder(x *Node[K, V]) {
+func (bst *GeminiRbt[K, V]) printPostOrder(x *Node[K, V]) {
 	if x == nil {
 		return
 	}
@@ -537,11 +537,11 @@ func (bst *GeminiRBT[K, V]) printPostOrder(x *Node[K, V]) {
 }
 
 // PrintLevelOrder prints the BST in level order.
-func (bst *GeminiRBT[K, V]) PrintLevelOrder() {
+func (bst *GeminiRbt[K, V]) PrintLevelOrder() {
 	bst.printLevelOrder(bst.root)
 }
 
-func (bst *GeminiRBT[K, V]) printLevelOrder(x *Node[K, V]) {
+func (bst *GeminiRbt[K, V]) printLevelOrder(x *Node[K, V]) {
 	if x == nil {
 		return
 	}
@@ -560,11 +560,11 @@ func (bst *GeminiRBT[K, V]) printLevelOrder(x *Node[K, V]) {
 }
 
 // Height returns the height of the BST.
-func (bst *GeminiRBT[K, V]) Height() int {
+func (bst *GeminiRbt[K, V]) Height() int {
 	return bst.height(bst.root)
 }
 
-func (bst *GeminiRBT[K, V]) height(x *Node[K, V]) int {
+func (bst *GeminiRbt[K, V]) height(x *Node[K, V]) int {
 	if x == nil {
 		return -1
 	}
@@ -578,7 +578,7 @@ func max(a, b int) int {
 	return b
 }
 
-func (bst *GeminiRBT[K, V]) GetAll() []rbt.KeyValuePair[K, V] {
+func (bst *GeminiRbt[K, V]) GetAll() []rbt.KeyValuePair[K, V] {
 	pairs := make([]rbt.KeyValuePair[K, V], 0)
 	var inorder func(*Node[K, V])
 	inorder = func(n *Node[K, V]) {
@@ -593,19 +593,19 @@ func (bst *GeminiRBT[K, V]) GetAll() []rbt.KeyValuePair[K, V] {
 	return pairs
 }
 
-func (bst *GeminiRBT[K, V]) Iterator() func(yield func(K, V) bool) {
-	return func(yield func(K, V) bool) {
+func (t *GeminiRbt[K, V]) Iterator() func(yield func(rbt.KeyValuePair[K, V]) bool) {
+	return func(yield func(rbt.KeyValuePair[K, V]) bool) {
 		var inorder func(*Node[K, V])
 		inorder = func(n *Node[K, V]) {
 			if n == nil {
 				return
 			}
 			inorder(n.left)
-			if !yield(n.key, n.val) {
+			if !yield(rbt.KeyValuePair[K, V]{Key: n.key, Val: n.val}) {
 				return
 			}
 			inorder(n.right)
 		}
-		inorder(bst.root)
+		inorder(t.root)
 	}
 }

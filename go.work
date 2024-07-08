@@ -1,7 +1,7 @@
 go 1.22.2
 
 use (
-	./cmd/tree
+	./cmd/rbt
 	./pkg/chatgpt
 	./pkg/copilot
 	./pkg/gemini

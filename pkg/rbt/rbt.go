@@ -10,5 +10,7 @@ type KeyValuePair[K constraints.Ordered, V any] struct {
 type RBT[K constraints.Ordered, V any] interface {
 	Put(key K, val V)
 	Get(key K) (V, bool)
+	IsEmpty() bool
 	GetAll() []KeyValuePair[K, V]
+	Iterator() func(yield func(KeyValuePair[K, V]) bool)
 }

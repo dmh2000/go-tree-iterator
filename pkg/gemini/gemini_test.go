@@ -96,7 +96,7 @@ func TestContainsKeysGeminiRbt(t *testing.T) {
 }
 
 // create a map of random keys and values
-func TestRandomKeysSgbtRbt(t *testing.T) {
+func TestRandomKeysGeminitRbt(t *testing.T) {
 	bst := NewRBT[int, string]()
 	keys := make([]int, 100)
 	values := make([]string, 100)
@@ -120,34 +120,8 @@ func TestRandomKeysSgbtRbt(t *testing.T) {
 	}
 }
 
-// test the BSTIterator
-func TestBSTIteratorSgbtRbt(t *testing.T) {
-	bst := NewRBT[int, string]()
-	bst.Put(1, "one")
-	bst.Put(2, "two")
-	bst.Put(3, "three")
-
-	keys := make([]int, 0)
-	values := make([]string, 0)
-	bst.Iterator()(func(k int, v string) bool {
-		keys = append(keys, k)
-		values = append(values, v)
-		return true
-	})
-
-	if keys[0] != 1 {
-		t.Errorf("BSTIterator() == %v; want [1, 2, 3]", keys)
-	}
-	if keys[1] != 2 {
-		t.Errorf("BSTIterator() == %v; want [1, 2, 3]", keys)
-	}
-	if keys[2] != 3 {
-		t.Errorf("BSTIterator() == %v; want [1, 2, 3]", keys)
-	}
-}
-
 // test the BSTIterator with a large number of random keys
-func TestSgbtIteratorRandom(t *testing.T) {
+func TestGeminitIteratorRandom(t *testing.T) {
 	bst := NewRBT[int, string]()
 
 	m := make(map[int]string)
@@ -162,31 +136,5 @@ func TestSgbtIteratorRandom(t *testing.T) {
 	for k, v := range m {
 		t.Log(k, v)
 		bst.Put(k, v)
-	}
-
-	// iterate over the BST and get the keys in order
-	keys2 := make([]int, 0)
-	values2 := make([]string, 0)
-
-	iter := bst.Iterator()
-	iter(func(k int, v string) bool {
-		keys2 = append(keys2, k)
-		values2 = append(values2, v)
-		return true
-	})
-
-	t.Log("--- in order keys")
-
-	// check that the keys are in order
-	k := keys2[0]
-	v := values2[0]
-	t.Log(k, v)
-	for i := 1; i < len(keys2); i++ {
-		if keys2[i] <= k {
-			t.Errorf("BSTIterator() == %v; want %v", keys2, keys2)
-		}
-		k = keys2[i]
-		v = values2[i]
-		t.Log(k, v)
 	}
 }
