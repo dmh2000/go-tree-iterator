@@ -138,6 +138,10 @@ func TestIteratorRandom(t *testing.T) {
 		rbt.Put(k, v)
 	}
 
+	for x := range rbt.Iterator() {
+		t.Log(x.Key, x.Val)
+	}
+
 	k := -1
 	for r := range rbt.Iterator() {
 		if r.Key < k {

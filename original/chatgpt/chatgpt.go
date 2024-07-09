@@ -1,13 +1,10 @@
 package chatgpt
 
 import (
-	"golang.org/x/exp/constraints"
-	"sqirvy.xyz/go-tree-iterator/rbt"
-)
+	"fmt"
 
-// chatgpt fix : change main struct name to ChatGptRBT
-// chatgpt fix : add NewChatGptRBT factory function
-// chatgpt fix : add IsEmpty function
+	"golang.org/x/exp/constraints"
+)
 
 // Color constants
 const (
@@ -17,27 +14,16 @@ const (
 
 // Node represents a node in the red-black tree.
 type Node[K constraints.Ordered, V any] struct {
-	// chatgpt fix: key, val K (val is not used)
-	key   K
-	value V
-	// chatgpt fix: left, right, parent *Node[K, V] (parent is not used)
-	left, right *Node[K, V]
-	color       bool
-	size        int
+	key, val            K
+	value               V
+	left, right, parent *Node[K, V]
+	color               bool
+	size                int
 }
 
-// ChatGptRBT represents a red-black binary search tree.
-type ChatGptRBT[K constraints.Ordered, V any] struct {
+// RedBlackBST represents a red-black binary search tree.
+type RedBlackBST[K constraints.Ordered, V any] struct {
 	root *Node[K, V]
-}
-
-func NewRBT[K constraints.Ordered, V any]() *ChatGptRBT[K, V] {
-	return &ChatGptRBT[K, V]{}
-}
-
-// chatgpt fix: missing IsEmpty function, copied from GeminiRBT
-func (bst *ChatGptRBT[K, V]) IsEmpty() bool {
-	return bst.root == nil
 }
 
 // NewNode creates a new red node with given key, value, size, and left and right children.
@@ -55,8 +41,7 @@ func IsRed[K constraints.Ordered, V any](x *Node[K, V]) bool {
 	if x == nil {
 		return false
 	}
-	// fix: return x.color == Red
-	return x.color
+	return x.color == Red
 }
 
 // Size returns the number of nodes in the tree rooted at x.
@@ -99,12 +84,12 @@ func FlipColors[K constraints.Ordered, V any](h *Node[K, V]) {
 }
 
 // Put inserts the specified key-value pair into the tree, overwriting the old value with the new value if the tree already contains the specified key.
-func (t *ChatGptRBT[K, V]) Put(key K, val V) {
+func (t *RedBlackBST[K, V]) Put(key K, val V) {
 	t.root = t.put(t.root, key, val)
 	t.root.color = Black
 }
 
-func (t *ChatGptRBT[K, V]) put(h *Node[K, V], key K, val V) *Node[K, V] {
+func (t *RedBlackBST[K, V]) put(h *Node[K, V], key K, val V) *Node[K, V] {
 	if h == nil {
 		return NewNode(key, val, 1, Red)
 	}
@@ -132,7 +117,7 @@ func (t *ChatGptRBT[K, V]) put(h *Node[K, V], key K, val V) *Node[K, V] {
 }
 
 // Get returns the value associated with the given key.
-func (t *ChatGptRBT[K, V]) Get(key K) (V, bool) {
+func (t *RedBlackBST[K, V]) Get(key K) (V, bool) {
 	x := t.root
 	for x != nil {
 		if key < x.key {
@@ -148,13 +133,13 @@ func (t *ChatGptRBT[K, V]) Get(key K) (V, bool) {
 }
 
 // Contains checks if the tree contains the given key.
-func (t *ChatGptRBT[K, V]) Contains(key K) bool {
+func (t *RedBlackBST[K, V]) Contains(key K) bool {
 	_, found := t.Get(key)
 	return found
 }
 
 // DeleteMin deletes the minimum key and associated value from the tree.
-func (t *ChatGptRBT[K, V]) DeleteMin() {
+func (t *RedBlackBST[K, V]) DeleteMin() {
 	if t.root == nil {
 		return
 	}
@@ -169,7 +154,7 @@ func (t *ChatGptRBT[K, V]) DeleteMin() {
 	}
 }
 
-func (t *ChatGptRBT[K, V]) deleteMin(h *Node[K, V]) *Node[K, V] {
+func (t *RedBlackBST[K, V]) deleteMin(h *Node[K, V]) *Node[K, V] {
 	if h.left == nil {
 		return nil
 	}
@@ -210,7 +195,7 @@ func Balance[K constraints.Ordered, V any](h *Node[K, V]) *Node[K, V] {
 }
 
 // DeleteMax deletes the maximum key and associated value from the tree.
-func (t *ChatGptRBT[K, V]) DeleteMax() {
+func (t *RedBlackBST[K, V]) DeleteMax() {
 	if t.root == nil {
 		return
 	}
@@ -225,7 +210,7 @@ func (t *ChatGptRBT[K, V]) DeleteMax() {
 	}
 }
 
-func (t *ChatGptRBT[K, V]) deleteMax(h *Node[K, V]) *Node[K, V] {
+func (t *RedBlackBST[K, V]) deleteMax(h *Node[K, V]) *Node[K, V] {
 	if IsRed(h.left) {
 		h = RotateRight(h)
 	}
@@ -253,7 +238,7 @@ func MoveRedRight[K constraints.Ordered, V any](h *Node[K, V]) *Node[K, V] {
 }
 
 // Delete deletes the specified key and its associated value from the tree.
-func (t *ChatGptRBT[K, V]) Delete(key K) {
+func (t *RedBlackBST[K, V]) Delete(key K) {
 	if !t.Contains(key) {
 		return
 	}
@@ -268,7 +253,7 @@ func (t *ChatGptRBT[K, V]) Delete(key K) {
 	}
 }
 
-func (t *ChatGptRBT[K, V]) delete(h *Node[K, V], key K) *Node[K, V] {
+func (t *RedBlackBST[K, V]) delete(h *Node[K, V], key K) *Node[K, V] {
 	if key < h.key {
 		if !IsRed(h.left) && !IsRed(h.left.left) {
 			h = MoveRedLeft(h)
@@ -304,59 +289,24 @@ func Min[K constraints.Ordered, V any](h *Node[K, V]) *Node[K, V] {
 	return h
 }
 
-// chatgpt fix: add GetAll function
-func (bst *ChatGptRBT[K, V]) GetAll() []rbt.KeyValuePair[K, V] {
-	pairs := make([]rbt.KeyValuePair[K, V], 0)
-	var inorder func(*Node[K, V])
-	inorder = func(n *Node[K, V]) {
-		if n == nil {
-			return
-		}
-		inorder(n.left)
-		pairs = append(pairs, rbt.KeyValuePair[K, V]{Key: n.key, Val: n.value})
-		inorder(n.right)
-	}
-	inorder(bst.root)
-	return pairs
-}
+func main() {
+	rb := &RedBlackBST[int, string]{}
+	rb.Put(1, "one")
+	rb.Put(2, "two")
+	rb.Put(3, "three")
 
-// chatgpt fix: add range over function Iterator
-func (t *ChatGptRBT[K, V]) Iterator() func(func(rbt.KeyValuePair[K, V]) bool) {
-	return func(yield func(rbt.KeyValuePair[K, V]) bool) {
-		var inorder func(*Node[K, V])
-		inorder = func(n *Node[K, V]) {
-			if n == nil {
-				return
-			}
-			inorder(n.left)
-			if !yield(rbt.KeyValuePair[K, V]{Key: n.key, Val: n.value}) {
-				return
-			}
-			inorder(n.right)
-		}
-		inorder(t.root)
+	val, found := rb.Get(2)
+	if found {
+		fmt.Println("Found:", val)
+	} else {
+		fmt.Println("Not found")
+	}
+
+	rb.Delete(2)
+	_, found = rb.Get(2)
+	if found {
+		fmt.Println("Found")
+	} else {
+		fmt.Println("Not found")
 	}
 }
-
-// chatgpt fix : remove main function
-// func main() {
-// 	rb := &ChatGptRBT[int, string]{}
-// 	rb.Put(1, "one")
-// 	rb.Put(2, "two")
-// 	rb.Put(3, "three")
-
-// 	val, found := rb.Get(2)
-// 	if found {
-// 		fmt.Println("Found:", val)
-// 	} else {
-// 		fmt.Println("Not found")
-// 	}
-
-// 	rb.Delete(2)
-// 	_, found = rb.Get(2)
-// 	if found {
-// 		fmt.Println("Found")
-// 	} else {
-// 		fmt.Println("Not found")
-// 	}
-// }
