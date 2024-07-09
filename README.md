@@ -46,7 +46,7 @@ I created the generic Node and RBT structs first, following the Java example. Af
 
 One feature is that it added error returns for some functions, like 'Get' when the key is not found. More on that below.
 
-I worked through the whole Java file and got it running. I only had to fix a few glitches. Copilot didn't capitalize the funcs that should be exported, and I had to massage a Node structure to be generic. It took about an hour to get it all done. The Java file had a lot of functionality besides just get and put. It is about 700 lines long.
+I worked through the whole Java file and got it running. I only had to fix a few glitches. Copilot didn't capitalize the funcs that should be exported, and I had to massage a Node structure to be generic. It took about an hour to get it all done. The Java file had a lot of utility functions besides just get and put and I left those out of the Copilot implementation.
 
 I added a rudimentary set of tests and they all passed. I had to do very little manual labor to get this thing running.
 
@@ -57,7 +57,7 @@ Once I had that working I had the bright idea to try another approach. Since the
 To do this, I used the [sgpt command line tool](https://github.com/tbckr/sgpt) with the Google Gemini Flash model (https://deepmind.google/technologies/gemini/flash/). I had watched how to use it with sgpt from a [video by AiCodeKing](https://www.youtube.com/watch?v=BoihrNkJ9dY). Btw, his series of AI videos is really great. It covers how to use all the different models and associated software locally. At a low level, not just using an existing web interface. Recommended.
 
 Here's the prompt I used:
-"$sgpt --code "using the file at https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/RedBlackBST.java.html as a model, create a version of that code using the go language. The implementation should be generic with respect to key and value types."
+"$sgpt --code "using the file at https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/RedBlackBST.java.html as a model, create a version of that code using the go language. The implementation should be generic with respect to key and value types. For functions in the Java model that are marked public, capitalize the first letter so they are exported"
 
 It took about a minute to generate a result. The code it generated was almost perfect. I had a very few things I needed to fix.
 
@@ -81,11 +81,39 @@ I ran two versions. For the first one I uploaded the bst.java file and prompted 
 
 I had to fix the exports, add a Keys function, copied from the Gemini version, and again had to add **constraints.Ordered** to the key 'K' type specs. This showed up as syntax errors in the places where the keys were being compared.
 
+I observed that this version, unlike Copilot and Gemini, did not always create methods for some of the non-exported functions. In some cases, it created simple functions that did the same thing without referencing the top level ~~object~~. For example
+
+```go
+// Gemini version
+func (bst *GeminiRbt[K, V]) rotateLeft(h *Node[K, V]) *Node[K, V] {
+	x := h.right
+	h.right = x.left
+	x.left = h
+	x.color = h.color
+	h.color = true
+	x.N = h.N
+	h.N = 1 + bst.size(h.left) + bst.size(h.right)
+	return x
+}
+
+// ChatGPT version
+func rotateLeft[K constraints.Ordered, V any](h *Node[K, V]) *Node[K, V] {
+	x := h.right
+	h.right = x.left
+	x.left = h
+	x.color = h.color
+	h.color = RED
+	x.size = h.size
+	h.size = size(h.left) + size(h.right) + 1
+	return x
+}
+```
+
 After about 15 minutes of massaging this version passed the tests.
 
 ### Extra Work for Compatibility
 
-At this point I wanted to make the 3 versions as compatible with the tests as possible. I added an interface definition for a red-black-tree model in pkg/rbt.
+At this point I wanted to make the 3 versions as compatible with the tests as possible. I added an interface definition for a red-black-tree model in pkg/rbt. I kept it simple for this exercise. The source Java code had a lot of additional utility functions for accessing the tree.
 
 ```go
 package rbt
@@ -113,7 +141,7 @@ I had to fix the Copilot version to use the bool returns instead of errors. That
 
 Ok, back to the original intent, implementing the range over function iterator.
 
-Iterating over a binary search tree is pretty simple, just do an inorder traversal and emit the key/value pairs. Copilot created the iterator for me. I just had to ask it for one. It magically knew to use an inorder traversal, totally different from one in the Java code.
+Iterating over a binary search tree is pretty simple, just do an inorder traversal and emit the key/value pairs. Copilot created the iterator for me. I just had to ask it for one by writing the function prototype. It magically knew to use an inorder traversal, totally different from one in the Java code.
 
 For the iterator to compile, I used go 1.22.5 with the GOEXPERIMENT=rangefunc env variable.
 
@@ -139,8 +167,6 @@ func (t *RBT[K, V]) Iterator() func(yield func(K, V) bool) {
 for r := range rbt.Iterator() {
 		fmt.Println(r.Key, r.Val)
 }
-
-
 ```
 
 # References

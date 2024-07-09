@@ -20,12 +20,12 @@ type Node[K constraints.Ordered, V any] struct {
 	size  int
 }
 
-type RBT[K constraints.Ordered, V any] struct {
+type ChatGptRBT[K constraints.Ordered, V any] struct {
 	root *Node[K, V]
 }
 
-func NewRBT[K constraints.Ordered, V any]() *RBT[K, V] {
-	return &RBT[K, V]{}
+func NewRBT[K constraints.Ordered, V any]() *ChatGptRBT[K, V] {
+	return &ChatGptRBT[K, V]{}
 }
 
 func isRed[K constraints.Ordered, V any](x *Node[K, V]) bool {
@@ -35,7 +35,7 @@ func isRed[K constraints.Ordered, V any](x *Node[K, V]) bool {
 	return x.color
 }
 
-func (t *RBT[K, V]) Size() int {
+func (t *ChatGptRBT[K, V]) Size() int {
 	return size(t.root)
 }
 
@@ -46,11 +46,11 @@ func size[K constraints.Ordered, V any](x *Node[K, V]) int {
 	return x.size
 }
 
-func (t *RBT[K, V]) IsEmpty() bool {
+func (t *ChatGptRBT[K, V]) IsEmpty() bool {
 	return t.root == nil
 }
 
-func (t *RBT[K, V]) Get(key K) (V, bool) {
+func (t *ChatGptRBT[K, V]) Get(key K) (V, bool) {
 	return get(t.root, key)
 }
 
@@ -69,7 +69,7 @@ func get[K constraints.Ordered, V any](x *Node[K, V], key K) (V, bool) {
 	}
 }
 
-func (t *RBT[K, V]) Put(key K, val V) {
+func (t *ChatGptRBT[K, V]) Put(key K, val V) {
 	t.root = put(t.root, key, val)
 	t.root.color = BLACK
 }
@@ -129,7 +129,7 @@ func flipColors[K constraints.Ordered, V any](h *Node[K, V]) {
 	h.right.color = !h.right.color
 }
 
-func (t *RBT[K, V]) Min() (K, bool) {
+func (t *ChatGptRBT[K, V]) Min() (K, bool) {
 	if t.IsEmpty() {
 		var zero K
 		return zero, false
@@ -145,7 +145,7 @@ func min[K constraints.Ordered, V any](x *Node[K, V]) *Node[K, V] {
 	return min(x.left)
 }
 
-func (t *RBT[K, V]) Max() (K, bool) {
+func (t *ChatGptRBT[K, V]) Max() (K, bool) {
 	if t.IsEmpty() {
 		var zero K
 		return zero, false
@@ -161,7 +161,7 @@ func max[K constraints.Ordered, V any](x *Node[K, V]) *Node[K, V] {
 	return max(x.right)
 }
 
-func (t *RBT[K, V]) DeleteMin() {
+func (t *ChatGptRBT[K, V]) DeleteMin() {
 	if t.IsEmpty() {
 		panic("BST underflow")
 	}
@@ -185,7 +185,7 @@ func deleteMin[K constraints.Ordered, V any](h *Node[K, V]) *Node[K, V] {
 	return balance(h)
 }
 
-func (t *RBT[K, V]) DeleteMax() {
+func (t *ChatGptRBT[K, V]) DeleteMax() {
 	if t.IsEmpty() {
 		panic("BST underflow")
 	}
@@ -212,7 +212,7 @@ func deleteMax[K constraints.Ordered, V any](h *Node[K, V]) *Node[K, V] {
 	return balance(h)
 }
 
-func (t *RBT[K, V]) Delete(key K) {
+func (t *ChatGptRBT[K, V]) Delete(key K) {
 	if t.IsEmpty() {
 		return
 	}
@@ -254,13 +254,13 @@ func delete[K constraints.Ordered, V any](h *Node[K, V], key K) *Node[K, V] {
 }
 
 // keys returns an iterator over the keys in the BST in ascending order.
-func (bst *RBT[K, V]) Keys() []K {
+func (bst *ChatGptRBT[K, V]) Keys() []K {
 	queue := make([]K, 0)
 	bst.keys(bst.root, &queue)
 	return queue
 }
 
-func (bst *RBT[K, V]) keys(x *Node[K, V], queue *[]K) {
+func (bst *ChatGptRBT[K, V]) keys(x *Node[K, V], queue *[]K) {
 	if x == nil {
 		return
 	}
@@ -270,13 +270,13 @@ func (bst *RBT[K, V]) keys(x *Node[K, V], queue *[]K) {
 }
 
 // keys returns an iterator over the keys in the BST in ascending order.
-func (bst *RBT[K, V]) KeysInOrder() []K {
+func (bst *ChatGptRBT[K, V]) KeysInOrder() []K {
 	queue := make([]K, 0)
 	bst.keysInOrder(bst.root, &queue)
 	return queue
 }
 
-func (bst *RBT[K, V]) keysInOrder(x *Node[K, V], queue *[]K) {
+func (bst *ChatGptRBT[K, V]) keysInOrder(x *Node[K, V], queue *[]K) {
 	if x == nil {
 		return
 	}
@@ -286,13 +286,13 @@ func (bst *RBT[K, V]) keysInOrder(x *Node[K, V], queue *[]K) {
 }
 
 // keys returns an iterator over the keys in the BST in level order.
-func (bst *RBT[K, V]) KeysLevelOrder() []K {
+func (bst *ChatGptRBT[K, V]) KeysLevelOrder() []K {
 	queue := make([]K, 0)
 	bst.keysLevelOrder(bst.root, &queue)
 	return queue
 }
 
-func (bst *RBT[K, V]) keysLevelOrder(x *Node[K, V], queue *[]K) {
+func (bst *ChatGptRBT[K, V]) keysLevelOrder(x *Node[K, V], queue *[]K) {
 	if x == nil {
 		return
 	}
@@ -311,13 +311,13 @@ func (bst *RBT[K, V]) keysLevelOrder(x *Node[K, V], queue *[]K) {
 }
 
 // keys returns an iterator over the keys in the BST in pre order.
-func (bst *RBT[K, V]) KeysPreOrder() []K {
+func (bst *ChatGptRBT[K, V]) KeysPreOrder() []K {
 	queue := make([]K, 0)
 	bst.keysPreOrder(bst.root, &queue)
 	return queue
 }
 
-func (bst *RBT[K, V]) keysPreOrder(x *Node[K, V], queue *[]K) {
+func (bst *ChatGptRBT[K, V]) keysPreOrder(x *Node[K, V], queue *[]K) {
 	if x == nil {
 		return
 	}
@@ -327,13 +327,13 @@ func (bst *RBT[K, V]) keysPreOrder(x *Node[K, V], queue *[]K) {
 }
 
 // keys returns an iterator over the keys in the BST in post order.
-func (bst *RBT[K, V]) KeysPostOrder() []K {
+func (bst *ChatGptRBT[K, V]) KeysPostOrder() []K {
 	queue := make([]K, 0)
 	bst.keysPostOrder(bst.root, &queue)
 	return queue
 }
 
-func (bst *RBT[K, V]) keysPostOrder(x *Node[K, V], queue *[]K) {
+func (bst *ChatGptRBT[K, V]) keysPostOrder(x *Node[K, V], queue *[]K) {
 	if x == nil {
 		return
 	}
@@ -375,7 +375,7 @@ func balance[K constraints.Ordered, V any](h *Node[K, V]) *Node[K, V] {
 	return h
 }
 
-func (bst *RBT[K, V]) GetAll() []rbt.KeyValuePair[K, V] {
+func (bst *ChatGptRBT[K, V]) GetAll() []rbt.KeyValuePair[K, V] {
 	pairs := make([]rbt.KeyValuePair[K, V], 0)
 	var inorder func(*Node[K, V])
 	inorder = func(n *Node[K, V]) {
@@ -390,7 +390,7 @@ func (bst *RBT[K, V]) GetAll() []rbt.KeyValuePair[K, V] {
 	return pairs
 }
 
-func (t *RBT[K, V]) Iterator() func(func(rbt.KeyValuePair[K, V]) bool) {
+func (t *ChatGptRBT[K, V]) Iterator() func(func(rbt.KeyValuePair[K, V]) bool) {
 	return func(yield func(rbt.KeyValuePair[K, V]) bool) {
 		var inorder func(*Node[K, V])
 		inorder = func(n *Node[K, V]) {
